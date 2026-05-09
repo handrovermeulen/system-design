@@ -88,12 +88,6 @@ People who build automations, skill chains, and AI workflows in Claude Code. We 
 
 This is the part we skip.
 
-## Powered By
-
-The intellectual framework underneath is Donella Meadows' systems thinking. Her book *Thinking in Systems* is one of those rare works that changes how everything looks after reading it.
-
-No need to have read it. The chain translates the concepts into plain language. No academic jargon in any output.
-
 ## Requirements
 
 - [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code)
