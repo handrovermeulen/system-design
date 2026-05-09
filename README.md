@@ -1,22 +1,22 @@
 # System Design for Claude Code
 
-A skill chain that makes you think before you build. 
+A skill chain that forces the thinking before the building. Radical concept.
 
 ## The Problem
 
-You tell Claude to build a system. It builds parts. Good parts, even. Skills that fire. Automations that trigger. Workflows that flow.
+We tell Claude to build a system. It builds parts. Good parts, even. Skills that fire. Automations that trigger. Workflows that flow.
 
-Then you zoom out and realise: the daily brief writes to a channel nobody reads. The escalation fires but nobody handles it. The backlog grows forever because nothing trims it. The webhook has no failure path, so when it breaks (it will break), the whole thing goes silent.
+Then we zoom out and realise: the daily brief writes to a channel nobody reads. The escalation fires but nobody handles it. The backlog grows forever because nothing trims it. The webhook has no failure path, so when it breaks (it will break), the whole thing goes silent.
 
 Claude builds fast. It does not ask "who consumes this?" or "what happens when this fails?" or "what stops this from growing until it kills the server?"
 
-You are supposed to catch that. You do not catch that because you are already building the next thing.
+We are supposed to catch that. We do not catch that because we are already building the next thing.
 
 ## The Solution
 
-Six commands. Run them in order. They walk you through first-principles system design before a single skill gets written.
+Six commands. Run them in order. They walk through first-principles system design before a single skill gets written.
 
-You define the goal. The chain maps what builds up, what moves, what self-corrects, and what breaks. Then it runs five closure tests that verify every loop is closed. If something fails, you fix the design, not the production system at 2am.
+Define the goal. The chain maps what builds up, what moves, what self-corrects, and what breaks. Then it runs five closure tests that verify every loop is closed. If something fails, fix the design, not the production system at 2am.
 
 ## Quick Start
 
@@ -31,12 +31,12 @@ Then in any Claude Code project:
 /system:new-system
 ```
 
-The chain will ask you what you are building. Answer honestly. It gets easier from there.
+The chain will ask what the system is. Answer honestly. It gets easier from there.
 
 ## The Chain
 
 ```
-/system:new-system           What are you building? Who cares? What matters?
+/system:new-system           What are we building? Who cares? What matters?
        |
 /system:map-system           What builds up? What moves? Where are the edges?
        |
@@ -49,19 +49,19 @@ The chain will ask you what you are building. Answer honestly. It gets easier fr
 /system:build-plan           What to build, in what order, with what patterns.
 ```
 
-Each step produces artifacts in `.system/` that feed the next. Two utility commands round it out: `/system:progress` shows where you are, `/system:help` shows the reference.
+Each step produces artifacts in `.system/` that feed the next. Two utility commands round it out: `/system:progress` shows current state, `/system:help` shows the reference.
 
 ## The Five Closure Tests
 
 This is the part that actually matters.
 
-A system passes verification only when all five tests clear. Warnings are acceptable. Failures are not. You fix the design or you do not proceed.
+A system passes verification only when all five tests clear. Warnings are acceptable. Failures are not. Fix the design or do not proceed.
 
-**1. Output Consumption.** Every output is consumed by at least one downstream process. If you produce a report and nobody reads it, the report is not useful. It is noise with a cron job.
+**1. Output Consumption.** Every output is consumed by at least one downstream process. If a report gets produced and nobody reads it, the report is not useful. It is noise with a cron job.
 
 **2. Trigger Sourcing.** Every trigger traces back to a concrete event or schedule. "The daily brief runs every morning" is not a trigger. A trigger names the scheduler, the webhook, the threshold. Something specific that actually fires.
 
-**3. Self-Correction.** Everything that accumulates has a way to detect drift and correct it. Backlogs, queues, caches, token counts. If it grows, something must watch it. If nothing watches it, it will grow until it becomes your problem on a Sunday.
+**3. Self-Correction.** Everything that accumulates has a way to detect drift and correct it. Backlogs, queues, caches, token counts. If it grows, something must watch it. If nothing watches it, it will grow until it becomes a problem on a Sunday.
 
 **4. Failure Paths.** Every flow has a documented failure case. Happy-path-only design is not design. It is optimism with a flowchart.
 
@@ -84,15 +84,15 @@ The chain generates these files in `.system/`:
 
 ## Who This Is For
 
-People who build automations, skill chains, and AI workflows in Claude Code. You know how to build. You just skip the part where you think about whether the thing you are building will actually hold together as a system.
+People who build automations, skill chains, and AI workflows in Claude Code. We all know how to build. We just skip the part where we think about whether the thing we are building will actually hold together as a system.
 
-This is the part you skip.
+This is the part we skip.
 
 ## Powered By
 
-The intellectual framework underneath is Donella Meadows' systems thinking. Stocks, flows, feedback loops, delays, leverage points. Her book *Thinking in Systems* is one of those rare works that changes how you see everything after you read it.
+The intellectual framework underneath is Donella Meadows' systems thinking. Her book *Thinking in Systems* is one of those rare works that changes how everything looks after reading it.
 
-You do not need to have read it. The chain translates the concepts into plain language. No academic jargon in any output.
+No need to have read it. The chain translates the concepts into plain language. No academic jargon in any output.
 
 ## Requirements
 
