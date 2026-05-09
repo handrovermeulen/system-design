@@ -1,6 +1,6 @@
 # System Design for Claude Code
 
-A skill chain that forces the thinking before the building. 
+A skill chain that forces systems thinking before building. 
 
 ## The Problem
 
