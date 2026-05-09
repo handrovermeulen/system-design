@@ -6,7 +6,7 @@ Design complete systems before building them. Close the loop.
 
 Claude builds parts, not wholes.
 People create skills, automations, and workflows that never close the loop.
-No feedback. No verification. No self-correction. Outputs that nobody consumes. Stocks that grow until they break.
+No feedback. No verification. No self-correction. Outputs nobody consumes. Things that grow unchecked until they break.
 
 ## The Solution
 
@@ -17,15 +17,15 @@ Verifies every loop is closed before you write a single skill.
 ## Quick Start
 
 ```bash
-git clone https://github.com/prgrmmd/system-design.git
+git clone https://github.com/PRGRMMD-AU/system-design.git
 cd system-design
-chmod +x install.sh && ./install.sh
+./install.sh
 ```
 
 Then in any Claude Code project:
 
 ```
-/system:new-system "your goal here"
+/system:new-system
 ```
 
 ## Skill Chain
@@ -44,33 +44,34 @@ Then in any Claude Code project:
 /system:build-plan       What skills and automations to build, in what order?
 ```
 
-Each step produces artifacts in `.system/{system-slug}/` and feeds the next step.
+Each step produces artifacts in `.system/` and feeds the next step.
 
 ## What It Produces
 
-The chain generates these files in `.system/{system-slug}/`:
+The chain generates these files in `.system/`:
 
-- `definition.md`. System goal, actors, constraints, success criteria.
-- `map.md`. Stocks, flows, boundaries, and the full system diagram.
-- `flows.md`. Connection specs: triggers, transformations, data shapes.
-- `feedback.md`. Balancing loops, reinforcing loops, failure handlers, delays.
-- `closure-report.md`. Results of five closure tests with pass/fail per loop.
-- `build-plan.md`. Ordered list of skills and automations to implement.
+- `SYSTEM-MAP.md`. System purpose, actors, boundaries, current state, key decisions.
+- `OUTCOMES.md`. Desired outcomes with measurability, current state, targets, priority.
+- `MAP.md`. What builds up, what moves, where the boundaries are.
+- `DESIGN.md`. Subsystem breakdown, dependencies, build order.
+- `flows/{flow-name}.md`. Per-flow specs: trigger, data, transform, handoff, failure path.
+- `feedback/{mechanism-name}.md`. Per-mechanism specs: detection, correction, delay.
+- `CLOSURE-REPORT.md`. Results of five closure tests with pass/fail per item.
+- `BUILD-PLAN.md`. Ordered component list with type, dependencies, and recommended patterns.
 
 ## The Five Closure Tests
 
 1. **Output consumption.** Every output is consumed by at least one downstream process.
 2. **Trigger sourcing.** Every trigger traces back to a concrete event or schedule.
-3. **Stock regulation.** Every stock that accumulates has a balancing outflow.
-4. **Failure handling.** Every flow has a defined failure path that does not silently drop data.
-5. **Feedback completeness.** Every reinforcing loop has a corresponding balancing loop.
+3. **Self-correction.** Everything that accumulates has a way to detect drift and correct it.
+4. **Failure paths.** Every flow has a documented failure case.
+5. **Information access.** Every decision point has its data source specified.
 
 A system passes verification only when all five tests clear.
 
 ## Powered By
 
 The intellectual framework is Donella Meadows' systems thinking.
-Stocks, flows, feedback loops, delays, and leverage points.
 The operator sees plain language throughout. The framework runs under the surface.
 
 ## Requirements
