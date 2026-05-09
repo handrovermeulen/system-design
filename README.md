@@ -17,7 +17,7 @@ Verifies every loop is closed before you write a single skill.
 ## Quick Start
 
 ```bash
-git clone https://github.com/PRGRMMD-AU/system-design.git
+git clone https://github.com/handrovermeulen/system-design.git
 cd system-design
 ./install.sh
 ```
