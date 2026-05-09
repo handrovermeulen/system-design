@@ -1,6 +1,6 @@
 # System Design for Claude Code
 
-A skill chain that forces the thinking before the building. Radical concept.
+A skill chain that forces the thinking before the building. 
 
 ## The Problem
 
