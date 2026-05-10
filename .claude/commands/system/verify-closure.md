@@ -52,7 +52,16 @@ echo "Flows: $FLOW_COUNT | Feedback mechanisms: $FEEDBACK_COUNT"
 
 If either count is zero, tell the operator which skill to run.
 
-## Step 2: Load Context
+## Step 2: Display Stage Banner
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ◉  SYSTEM DESIGN >> VERIFYING CLOSURE  ·  05/06
+  Five tests. Every loop must close.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+## Step 3: Load Context
 
 Read all design artifacts:
 - `.system/SYSTEM-MAP.md`
@@ -126,7 +135,10 @@ Add this as the first line of CLOSURE-REPORT.md (after any frontmatter):
 Present the score and test summary.
 
 ```
-System Design: Closure Verified
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ◉  SYSTEM DESIGN >> CLOSURE VERIFIED ✓  ·  05/06
+  All five tests passed. Every loop is closed.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Score: 5/5 tests passed
 Items checked: [total]
@@ -134,11 +146,16 @@ Warnings: [count]
 
 [Test result table from agent return]
 
-Artifacts:
-  .system/CLOSURE-REPORT.md
-  .system/CLOSURE-REPORT.html
+| Artifact              | Location                    |
+|-----------------------|-----------------------------|
+| Closure report        | .system/CLOSURE-REPORT.md   |
+| Visual report         | .system/CLOSURE-REPORT.html |
 
-Next: /system:build-plan
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Next: /system:build-plan -- classify components and generate the build sequence
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 **If `## CLOSURE GAPS FOUND`:**
@@ -146,14 +163,21 @@ Next: /system:build-plan
 Present failures with fix recommendations.
 
 ```
-System Design: Closure Gaps Found
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ◉  SYSTEM DESIGN >> CLOSURE GAPS FOUND  ·  05/06
+  Fix before proceeding. Gaps compound.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Score: [X]/5 tests passed
 Failures: [count]
 
 [Failure table with recommended fixes]
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 Fix the gaps, then re-run /system:verify-closure.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ## Step 6: Update State

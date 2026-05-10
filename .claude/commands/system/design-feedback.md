@@ -53,9 +53,10 @@ Extract: all accumulations from MAP.md, all flows, all outcomes, config preferen
 ## Step 2: Display Stage Banner
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> DESIGNING FEEDBACK
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ↺  SYSTEM DESIGN >> DESIGNING FEEDBACK  ·  04/06
+  What self-corrects? What amplifies? What traps exist?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Designing self-correction mechanisms for [system name]...
 Spawning sys-feedback-designer agent.
@@ -136,9 +137,10 @@ ls .system/feedback/*.md 2>/dev/null | wc -l
 Read `.system/config.json`. If `diagram` is `true`:
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> GENERATING DIAGRAM
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ↺  SYSTEM DESIGN >> GENERATING DIAGRAM  ·  04/06
+  Mapping what builds up, what moves, and what corrects.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 Generate an Excalidraw diagram using the excalidraw-diagram skill methodology.
@@ -205,9 +207,10 @@ Read `.system/STATE.md` and update:
 ## Step 8: Present Results
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> FEEDBACK DESIGNED
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ↺  SYSTEM DESIGN >> FEEDBACK DESIGNED ✓  ·  04/06
+  Every accumulation watched. Every loop closed.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Mechanisms:** [count]
 **Amplifiers identified:** [count]
@@ -247,11 +250,11 @@ If diagram was generated:
 | Feedback specs   | .system/feedback/                    |
 | Diagram          | .system/system-diagram.excalidraw    |
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Next: /system:verify-closure -- run five closure tests to verify the design is complete
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 </process>

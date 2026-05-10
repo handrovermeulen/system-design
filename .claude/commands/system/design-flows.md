@@ -48,9 +48,10 @@ Extract: all accumulations and their inflows/outflows from MAP.md, subsystem str
 ## Step 2: Display Stage Banner
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> DESIGNING FLOWS
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ⇢  SYSTEM DESIGN >> DESIGNING FLOWS  ·  03/06
+  How do parts connect? What triggers what?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Designing flow connections for [system name]...
 Spawning sys-flow-designer agent.
@@ -137,9 +138,10 @@ Read `.system/STATE.md` and update:
 ## Step 7: Present Results
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> FLOWS DESIGNED
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ⇢  SYSTEM DESIGN >> FLOWS DESIGNED ✓  ·  03/06
+  Every trigger sourced, every handoff specified.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Flows specified:** [count]
 **Trigger types:** event: [N], schedule: [N], threshold: [N], manual: [N]
@@ -151,11 +153,11 @@ Read `.system/STATE.md` and update:
 | Flow specs       | .system/flows/       |
 | Design (updated) | .system/DESIGN.md    |
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Next: /system:design-feedback -- add self-correction mechanisms and check for trap patterns
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 </process>

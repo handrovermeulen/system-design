@@ -48,9 +48,10 @@ Extract: system name, purpose, actors, boundaries, subsystems, outcomes, config 
 ## Step 2: Display Stage Banner
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> MAPPING
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ◎  SYSTEM DESIGN >> MAPPING  ·  02/06
+  What builds up, what moves, where are the edges.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Mapping [system name]...
 Spawning sys-mapper agent.
@@ -128,9 +129,10 @@ Read `.system/STATE.md` and update:
 ## Step 6: Present Results
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> MAPPING COMPLETE
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ◎  SYSTEM DESIGN >> MAPPING COMPLETE ✓  ·  02/06
+  Accumulations, flows, and boundaries defined.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Accumulations:** [count]
 **Flows identified:** [count]
@@ -142,11 +144,11 @@ Read `.system/STATE.md` and update:
 |------------|-----------------|
 | System Map | .system/MAP.md  |
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Next: /system:design-flows -- design flow connections between subsystems
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 </process>

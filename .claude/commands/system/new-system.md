@@ -56,9 +56,10 @@ You MUST run both checks via the Bash tool before proceeding.
 ## Phase 2: Deep Questioning
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> QUESTIONING
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ◆  SYSTEM DESIGN >> QUESTIONING  ·  01/06
+  Define the goal before building anything.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 **Open the conversation:**
@@ -166,9 +167,10 @@ Do not compress. Capture everything gathered.
 Present the system back to the operator:
 
 ```
-----------------------------------------------------
- SYSTEM DESIGN >> INITIALIZED
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ◆  SYSTEM DESIGN >> INITIALIZED ✓  ·  01/06
+  Foundation set. Ready for mapping.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **[System Name]**
 
@@ -184,11 +186,11 @@ Present the system back to the operator:
 
 **[N] outcomes** | **[M] subsystems identified** | Ready for mapping
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Next: /system:map-system -- inventory what builds up, what moves, where the boundaries are
 
-----------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 </process>

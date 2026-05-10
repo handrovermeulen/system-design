@@ -45,7 +45,16 @@ Read CLOSURE-REPORT.md and check overall status. If any test has FAIL status, st
 
 Warnings are acceptable. Proceed if all tests show PASS or WARNING.
 
-## Step 2: Load Design Artifacts
+## Step 2: Display Stage Banner
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ▤  SYSTEM DESIGN >> BUILDING PLAN  ·  06/06
+  Classify. Order. Identify reuse. Ship.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+## Step 3: Load Design Artifacts
 
 Read all design files:
 - `.system/SYSTEM-MAP.md`
@@ -127,7 +136,10 @@ Add this as the first line of BUILD-PLAN.md (after any frontmatter):
 Read the BUILD-PLAN.md written by the agent and present it:
 
 ```
-System Design: Build Plan Ready
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ▤  SYSTEM DESIGN >> BUILD PLAN READY ✓  ·  06/06
+  Classified. Ordered. Ready to build.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Components: [count]
   Skills: [N] | Automations: [N] | Data Structures: [N] | SOPs: [N]
@@ -142,11 +154,16 @@ Reusable existing skills: [count]
 Claude Code patterns:
   [pattern]: [which components]
 
-Artifacts:
-  .system/BUILD-PLAN.md
-  .system/BUILD-PLAN.html
+| Artifact         | Location               |
+|------------------|------------------------|
+| Build plan       | .system/BUILD-PLAN.md  |
+| Visual board     | .system/BUILD-PLAN.html|
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Start building: /new-skill [first-component-name]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ## Step 6: Update State
