@@ -143,6 +143,17 @@ Output this in your response as a clickable markdown link:
 [Open Closure Report in Browser](file:///absolute/path/to/CLOSURE-REPORT.html)
 ```
 
+### Publish to visible vault folder
+
+Copy the final artifacts to `System-Designs/{active-system}/` so they are visible in Obsidian's file explorer, independent of whether the operator uses Cursor/VS Code:
+
+```bash
+mkdir -p "System-Designs/$ACTIVE"
+cp ".system/$ACTIVE/CLOSURE-REPORT.md" "System-Designs/$ACTIVE/CLOSURE-REPORT.md"
+cp ".system/$ACTIVE/CLOSURE-REPORT.html" "System-Designs/$ACTIVE/CLOSURE-REPORT.html"
+echo "Published to System-Designs/$ACTIVE/"
+```
+
 ## Step 5: Handle Results
 
 **If `## CLOSURE VERIFIED`:**
@@ -161,10 +172,10 @@ Warnings: [count]
 
 [Test result table from agent return]
 
-| Artifact              | Location                    |
-|-----------------------|-----------------------------|
-| Closure report        | .system/CLOSURE-REPORT.md   |
-| Visual report         | .system/CLOSURE-REPORT.html |
+| Artifact              | Location                                        |
+|-----------------------|-------------------------------------------------|
+| Closure report        | System-Designs/{active-system}/CLOSURE-REPORT.md   |
+| Visual report         | System-Designs/{active-system}/CLOSURE-REPORT.html |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

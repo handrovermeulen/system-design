@@ -193,6 +193,19 @@ Output this in your response as a clickable markdown link:
 [Open Build Plan in Browser](file:///absolute/path/to/BUILD-PLAN.html)
 ```
 
+### Publish to visible vault folder
+
+Copy the final artifacts to `System-Designs/{active-system}/` so they are visible in Obsidian's file explorer and graph, independent of whether the operator uses Cursor/VS Code:
+
+```bash
+mkdir -p "System-Designs/$ACTIVE"
+cp ".system/$ACTIVE/BUILD-PLAN.md" "System-Designs/$ACTIVE/BUILD-PLAN.md"
+cp ".system/$ACTIVE/BUILD-PLAN.html" "System-Designs/$ACTIVE/BUILD-PLAN.html"
+echo "Published to System-Designs/$ACTIVE/"
+```
+
+The `.system/` folder remains the working directory. `System-Designs/` is the published output — visible in Obsidian, linkable from notes, shows up in the graph.
+
 ## Step 5: Present Build Plan
 
 Read the BUILD-PLAN.md written by the agent and present it:
@@ -216,10 +229,10 @@ Reusable existing skills: [count]
 Claude Code patterns:
   [pattern]: [which components]
 
-| Artifact         | Location               |
-|------------------|------------------------|
-| Build plan       | .system/BUILD-PLAN.md  |
-| Visual board     | .system/BUILD-PLAN.html|
+| Artifact         | Location                                          |
+|------------------|---------------------------------------------------|
+| Build plan       | System-Designs/{active-system}/BUILD-PLAN.md      |
+| Visual report    | System-Designs/{active-system}/BUILD-PLAN.html    |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -266,8 +279,9 @@ Write updated STATE.md.
 - [ ] Copy as markdown exports build order as checklist
 - [ ] ToC scroll highlighting active section
 - [ ] HTML is fully self-contained (no CDN, no external fonts)
-- [ ] BUILD-PLAN.html saved alongside markdown
+- [ ] BUILD-PLAN.html saved to .system/{active-system}/
 - [ ] [Open Visual Build Plan] link added to top of BUILD-PLAN.md
+- [ ] Both MD and HTML copied to System-Designs/{active-system}/ (visible in Obsidian)
 - [ ] Claude Code patterns recommended
 - [ ] STATE.md updated
 - [ ] Operator knows how to start building
