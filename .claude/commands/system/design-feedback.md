@@ -137,7 +137,16 @@ ls ".system/$ACTIVE/feedback/"*.md 2>/dev/null | wc -l
 
 ## Step 6: Diagram Generation (Conditional)
 
-Read `.system/config.json`. If `diagram` is `true`:
+Read `.system/{active-system}/config.json`. If `diagram` is `true`:
+
+First verify the Excalidraw plugin is still installed:
+```bash
+[ -d ".obsidian/plugins/obsidian-excalidraw-plugin" ] && echo "excalidraw:installed" || echo "excalidraw:missing"
+```
+
+If `excalidraw:missing`: skip diagram generation, warn the operator ("Excalidraw plugin not found — skipping diagram. Install from Community Plugins to enable."), and continue to Step 7.
+
+If `excalidraw:installed`:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -190,13 +199,22 @@ Namespace element ID seeds by section:
 
 After generating JSON, render to PNG and view. Fix and re-render until passing all 27 quality checklist items from SKILL.md.
 
+The diagram saves to `Excalidraw/{active-system-name}-system-diagram.excalidraw` so Obsidian and the Excalidraw plugin can open it directly.
+
 ```bash
-cd .claude/skills/excalidraw-diagram/references && uv run python render_excalidraw.py ../../../../.system/system-diagram.excalidraw
+mkdir -p Excalidraw
+DIAGRAM_PATH="Excalidraw/$ACTIVE-system-diagram.excalidraw"
+echo "Diagram path: $DIAGRAM_PATH"
+```
+
+After generating the JSON, render to PNG to validate:
+```bash
+cd .claude/skills/excalidraw-diagram/references && uv run python render_excalidraw.py "../../../../$DIAGRAM_PATH"
 ```
 
 Use the Read tool to inspect the PNG. Fix JSON, re-render, repeat until the diagram is clean.
 
-Save the validated diagram to `.system/system-diagram.excalidraw`.
+Save the validated diagram to `Excalidraw/{active-system-name}-system-diagram.excalidraw`.
 
 ## Step 7: Update STATE.md
 
@@ -248,10 +266,10 @@ If diagram was generated:
 ```
 
 ```
-| Artifact         | Location                                           |
-|------------------|----------------------------------------------------|
-| Feedback specs   | .system/{active-system}/feedback/                  |
-| Diagram          | .system/{active-system}/system-diagram.excalidraw  |
+| Artifact         | Location                                              |
+|------------------|-------------------------------------------------------|
+| Feedback specs   | .system/{active-system}/feedback/                     |
+| Diagram          | Excalidraw/{active-system}-system-diagram.excalidraw  |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -265,7 +283,7 @@ Next: /system:verify-closure -- run five closure tests to verify the design is c
 <output>
 
 - `.system/{active-system}/feedback/{mechanism-name}.md` (one per mechanism, created)
-- `.system/{active-system}/system-diagram.excalidraw` (if diagram enabled)
+- `Excalidraw/{active-system}-system-diagram.excalidraw` (if diagram enabled and plugin installed)
 - `.system/{active-system}/STATE.md` (updated)
 
 </output>

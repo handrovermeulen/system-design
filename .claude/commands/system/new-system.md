@@ -131,10 +131,22 @@ Use AskUserQuestion for each setting:
   - "Comprehensive" -- Full specification of every flow and mechanism
 
 **Question 3: Diagrams**
+
+Before asking, check whether the Excalidraw community plugin is installed:
+
+```bash
+[ -d ".obsidian/plugins/obsidian-excalidraw-plugin" ] && echo "excalidraw:installed" || echo "excalidraw:missing"
+```
+
+If `excalidraw:missing`: skip the question entirely, set `diagram: false` in config, and tell the operator:
+"Diagrams disabled — Obsidian Excalidraw plugin not found. Install it from Community Plugins (search 'Excalidraw') and re-run `/system:new-system` to enable diagrams."
+
+If `excalidraw:installed`:
+
 - header: "Diagrams"
-- question: "Generate system diagrams during design?"
+- question: "Generate a system diagram at the feedback stage? Saved to your Excalidraw/ folder."
 - options:
-  - "Yes" -- Create visual diagrams at key stages (Recommended)
+  - "Yes" -- Create visual diagram (requires Excalidraw plugin — detected ✓)
   - "No" -- Text only
 
 Write `.system/{name}/config.json`:
