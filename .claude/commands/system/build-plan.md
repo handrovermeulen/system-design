@@ -34,16 +34,21 @@ Transform the verified system design into a concrete, ordered build plan. Classi
 
 <process>
 
-## Step 1: Check Prerequisites
+## Step 1: Resolve Active System and Check Prerequisites
 
 ```bash
-[ ! -f .system/CLOSURE-REPORT.md ] && echo "ERROR: Run /system:verify-closure first" && exit 1
+ACTIVE=$(cat .system/ACTIVE 2>/dev/null)
+[ -z "$ACTIVE" ] && echo "ERROR: No active system. Run /system:new-system [name] first." && exit 1
+[ ! -f ".system/$ACTIVE/CLOSURE-REPORT.md" ] && echo "ERROR: Run /system:verify-closure first" && exit 1
+echo "Active system: $ACTIVE | Working directory: .system/$ACTIVE/"
 ```
 
-Read CLOSURE-REPORT.md and check overall status. If any test has FAIL status, stop:
+Read `.system/{active-system}/CLOSURE-REPORT.md` and check overall status. If any test has FAIL status, stop:
 "The system design has unresolved failures. Address them and re-run `/system:verify-closure` first."
 
 Warnings are acceptable. Proceed if all tests show PASS or WARNING.
+
+From this point, all file paths use `.system/{active-system}/` as the root.
 
 ## Step 2: Display Stage Banner
 
@@ -56,14 +61,14 @@ Warnings are acceptable. Proceed if all tests show PASS or WARNING.
 
 ## Step 3: Load Design Artifacts
 
-Read all design files:
-- `.system/SYSTEM-MAP.md`
-- `.system/MAP.md`
-- `.system/OUTCOMES.md`
-- `.system/DESIGN.md`
-- All files in `.system/flows/`
-- All files in `.system/feedback/`
-- `.system/CLOSURE-REPORT.md`
+Read all design files from `.system/{active-system}/`:
+- `.system/{active-system}/SYSTEM-MAP.md`
+- `.system/{active-system}/MAP.md`
+- `.system/{active-system}/OUTCOMES.md`
+- `.system/{active-system}/DESIGN.md`
+- All files in `.system/{active-system}/flows/`
+- All files in `.system/{active-system}/feedback/`
+- `.system/{active-system}/CLOSURE-REPORT.md`
 
 ## Step 3: Spawn Build Planner
 
@@ -124,9 +129,9 @@ The operator can drag components between stages to reprioritise, then Copy as ma
 
 Interactivity (all self-contained JS): drag-drop, tag filter by type, Reset, Copy as markdown.
 
-Save to `.system/BUILD-PLAN.html`.
+Save to `.system/{active-system}/BUILD-PLAN.html`.
 
-Add this as the first line of BUILD-PLAN.md (after any frontmatter):
+Add this as the first line of `.system/{active-system}/BUILD-PLAN.md` (after any frontmatter):
 ```
 [Open Visual Build Plan](BUILD-PLAN.html)
 ```
@@ -168,7 +173,7 @@ Start building: /new-skill [first-component-name]
 
 ## Step 6: Update State
 
-Read `.system/STATE.md` and update:
+Read `.system/{active-system}/STATE.md` and update:
 - Current Position: complete
 - Last completed: build-plan
 - Mark build-plan checkbox

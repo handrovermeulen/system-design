@@ -35,22 +35,27 @@ This is the intellectual core of the /system skill chain. A system that passes a
 
 <process>
 
-## Step 1: Check Prerequisites
+## Step 1: Resolve Active System and Check Prerequisites
 
 ```bash
-[ ! -f .system/MAP.md ] && echo "ERROR: Run /system:map-system first" && exit 1
-[ ! -d .system/flows ] && echo "ERROR: Run /system:design-flows first" && exit 1
-[ ! -d .system/feedback ] && echo "ERROR: Run /system:design-feedback first" && exit 1
+ACTIVE=$(cat .system/ACTIVE 2>/dev/null)
+[ -z "$ACTIVE" ] && echo "ERROR: No active system. Run /system:new-system [name] first." && exit 1
+[ ! -f ".system/$ACTIVE/MAP.md" ] && echo "ERROR: Run /system:map-system first" && exit 1
+[ ! -d ".system/$ACTIVE/flows" ] && echo "ERROR: Run /system:design-flows first" && exit 1
+[ ! -d ".system/$ACTIVE/feedback" ] && echo "ERROR: Run /system:design-feedback first" && exit 1
+echo "Active system: $ACTIVE | Working directory: .system/$ACTIVE/"
 ```
 
 Count flow files and feedback files:
 ```bash
-FLOW_COUNT=$(ls .system/flows/*.md 2>/dev/null | wc -l)
-FEEDBACK_COUNT=$(ls .system/feedback/*.md 2>/dev/null | wc -l)
+FLOW_COUNT=$(ls ".system/$ACTIVE/flows/"*.md 2>/dev/null | wc -l)
+FEEDBACK_COUNT=$(ls ".system/$ACTIVE/feedback/"*.md 2>/dev/null | wc -l)
 echo "Flows: $FLOW_COUNT | Feedback mechanisms: $FEEDBACK_COUNT"
 ```
 
 If either count is zero, tell the operator which skill to run.
+
+From this point, all file paths use `.system/{active-system}/` as the root.
 
 ## Step 2: Display Stage Banner
 
@@ -63,13 +68,13 @@ If either count is zero, tell the operator which skill to run.
 
 ## Step 3: Load Context
 
-Read all design artifacts:
-- `.system/SYSTEM-MAP.md`
-- `.system/MAP.md`
-- `.system/OUTCOMES.md`
-- `.system/DESIGN.md`
-- All files in `.system/flows/`
-- All files in `.system/feedback/`
+Read all design artifacts from `.system/{active-system}/`:
+- `.system/{active-system}/SYSTEM-MAP.md`
+- `.system/{active-system}/MAP.md`
+- `.system/{active-system}/OUTCOMES.md`
+- `.system/{active-system}/DESIGN.md`
+- All files in `.system/{active-system}/flows/`
+- All files in `.system/{active-system}/feedback/`
 
 ## Step 3: Spawn Closure Verifier
 
@@ -121,9 +126,9 @@ Interactivity (all self-contained JS):
 - Auto-open any FAIL sections on page load
 - ToC scroll highlighting
 
-Save to `.system/CLOSURE-REPORT.html`.
+Save to `.system/{active-system}/CLOSURE-REPORT.html`.
 
-Add this as the first line of CLOSURE-REPORT.md (after any frontmatter):
+Add this as the first line of `.system/{active-system}/CLOSURE-REPORT.md` (after any frontmatter):
 ```
 [Open Visual Report](CLOSURE-REPORT.html)
 ```
@@ -182,7 +187,7 @@ Fix the gaps, then re-run /system:verify-closure.
 
 ## Step 6: Update State
 
-Read `.system/STATE.md` and update:
+Read `.system/{active-system}/STATE.md` and update:
 - Current Position: verification
 - Last completed: verify-closure (if passed)
 - Mark verify-closure checkbox

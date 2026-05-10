@@ -15,9 +15,9 @@ Design the flow connections between subsystems. For every movement in the system
 
 Spawns the sys-flow-designer agent to question the operator on each flow.
 
-**Reads:** `.system/MAP.md`, `.system/DESIGN.md`
-**Creates:** `.system/flows/{flow-name}.md` (one per major flow)
-**Updates:** `.system/DESIGN.md`, `.system/STATE.md`
+**Reads:** `.system/{active}/MAP.md`, `.system/{active}/DESIGN.md`
+**Creates:** `.system/{active}/flows/{flow-name}.md` (one per major flow)
+**Updates:** `.system/{active}/DESIGN.md`, `.system/{active}/STATE.md`
 
 **After this command:** Run `/system:design-feedback` to add self-correction mechanisms.
 
@@ -31,17 +31,20 @@ Spawns the sys-flow-designer agent to question the operator on each flow.
 
 <process>
 
-## Step 1: Validate State
+## Step 1: Resolve Active System and Validate
 
 ```bash
-[ ! -f .system/MAP.md ] && echo "ERROR: No system map found. Run /system:map-system first." && exit 1
+ACTIVE=$(cat .system/ACTIVE 2>/dev/null)
+[ -z "$ACTIVE" ] && echo "ERROR: No active system. Run /system:new-system [name] first." && exit 1
+[ ! -f ".system/$ACTIVE/MAP.md" ] && echo "ERROR: No system map found. Run /system:map-system first." && exit 1
+echo "Active system: $ACTIVE | Working directory: .system/$ACTIVE/"
 ```
 
-Read:
-- `.system/MAP.md`
-- `.system/DESIGN.md`
-- `.system/OUTCOMES.md`
-- `.system/config.json`
+From this point, all file paths use `.system/{active-system}/` as the root. Read:
+- `.system/{active-system}/MAP.md`
+- `.system/{active-system}/DESIGN.md`
+- `.system/{active-system}/OUTCOMES.md`
+- `.system/{active-system}/config.json`
 
 Extract: all accumulations and their inflows/outflows from MAP.md, subsystem structure from DESIGN.md, config preferences.
 
@@ -118,17 +121,17 @@ Read the agent's structured return. Extract:
 
 Verify flow files were written:
 ```bash
-ls .system/flows/*.md 2>/dev/null | wc -l
+ls ".system/$ACTIVE/flows/"*.md 2>/dev/null | wc -l
 ```
 
 Verify DESIGN.md was updated:
 ```bash
-grep -c "Flows:" .system/DESIGN.md
+grep -c "Flows:" ".system/$ACTIVE/DESIGN.md"
 ```
 
 ## Step 6: Update STATE.md
 
-Read `.system/STATE.md` and update:
+Read `.system/{active-system}/STATE.md` and update:
 - Stage: feedback
 - Last completed: design-flows
 - Next step: design-feedback
@@ -148,10 +151,10 @@ Read `.system/STATE.md` and update:
 
 [Flow summary table from agent return]
 
-| Artifact         | Location             |
-|------------------|----------------------|
-| Flow specs       | .system/flows/       |
-| Design (updated) | .system/DESIGN.md    |
+| Artifact         | Location                              |
+|------------------|---------------------------------------|
+| Flow specs       | .system/{active-system}/flows/        |
+| Design (updated) | .system/{active-system}/DESIGN.md     |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -164,9 +167,9 @@ Next: /system:design-feedback -- add self-correction mechanisms and check for tr
 
 <output>
 
-- `.system/flows/{flow-name}.md` (one per major flow, created)
-- `.system/DESIGN.md` (updated with flow specs)
-- `.system/STATE.md` (updated)
+- `.system/{active-system}/flows/{flow-name}.md` (one per major flow, created)
+- `.system/{active-system}/DESIGN.md` (updated with flow specs)
+- `.system/{active-system}/STATE.md` (updated)
 
 </output>
 

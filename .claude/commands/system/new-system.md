@@ -11,14 +11,17 @@ allowed-tools:
 
 <objective>
 
-Initialize a new system design through deep structured questioning. Map the operator's mental model into concrete system components before any design work begins.
+Initialize a new named system design through deep structured questioning. Map the operator's mental model into concrete system components before any design work begins.
+
+Each system lives in its own folder: `.system/{name}/`. Multiple systems can coexist. One is active at a time.
 
 **Creates:**
-- `.system/SYSTEM-MAP.md` -- system purpose, actors, boundaries
-- `.system/OUTCOMES.md` -- desired outcomes with measurability
-- `.system/DESIGN.md` -- subsystem structure (skeleton)
-- `.system/STATE.md` -- chain progress tracker
-- `.system/config.json` -- workflow preferences
+- `.system/{name}/SYSTEM-MAP.md` -- system purpose, actors, boundaries
+- `.system/{name}/OUTCOMES.md` -- desired outcomes with measurability
+- `.system/{name}/DESIGN.md` -- subsystem structure (skeleton)
+- `.system/{name}/STATE.md` -- chain progress tracker
+- `.system/{name}/config.json` -- workflow preferences
+- `.system/ACTIVE` -- pointer to the currently active system
 
 **After this command:** Run `/system:map-system` to inventory what builds up and what moves.
 
@@ -39,19 +42,30 @@ Initialize a new system design through deep structured questioning. Map the oper
 
 ## Phase 1: Setup
 
-**Execute these checks before any operator interaction:**
+**Execute these steps before any operator interaction:**
 
-1. **Abort if system exists:**
+1. **Extract the system name from the command argument.** If the operator typed `/system:new-system my-system-name`, use `my-system-name`. If no argument was provided, ask inline (not AskUserQuestion): "What will you call this system? Use lowercase letters and hyphens, no spaces (e.g. `telegram-router`, `content-pipeline`)." Wait for the answer.
+
+2. **Validate the name:**
    ```bash
-   [ -d .system ] && echo "ERROR: System already initialized. Use /system:map-system or check .system/STATE.md for current position." && exit 1
+   NAME="{extracted-name}"
+   echo "$NAME" | grep -qE '^[a-z0-9][a-z0-9-]*$' || echo "ERROR: Name must be lowercase letters, numbers, and hyphens only." && exit 1
+   echo "System name: $NAME"
    ```
 
-2. **Create system directory:**
+3. **Abort if this system already exists:**
    ```bash
-   mkdir -p .system
+   [ -d ".system/$NAME" ] && echo "ERROR: System '$NAME' already exists. Use /system:switch $NAME to activate it, or choose a different name." && exit 1
    ```
 
-You MUST run both checks via the Bash tool before proceeding.
+4. **Create the system directory and set as active:**
+   ```bash
+   mkdir -p ".system/$NAME"
+   echo "$NAME" > .system/ACTIVE
+   echo "Created .system/$NAME/ | Set as active system."
+   ```
+
+You MUST run all four steps via the Bash tool before proceeding. Use `$NAME` as the working directory prefix for all file paths throughout this command.
 
 ## Phase 2: Deep Questioning
 
@@ -123,7 +137,7 @@ Use AskUserQuestion for each setting:
   - "Yes" -- Create visual diagrams at key stages (Recommended)
   - "No" -- Text only
 
-Write `.system/config.json`:
+Write `.system/{name}/config.json`:
 ```json
 {
   "mode": "[chosen mode]",
@@ -136,25 +150,27 @@ Write `.system/config.json`:
 
 Synthesize all questioning output into the system files using the templates.
 
-**SYSTEM-MAP.md:** Use `templates/system-map.md`. Populate:
+Write all files into `.system/{name}/`. Use `{name}` resolved from Phase 1.
+
+**`.system/{name}/SYSTEM-MAP.md`:** Use `templates/system-map.md`. Populate:
 - System name and purpose (one paragraph)
 - Actors table (from Phase 2 questioning)
 - Boundaries (inside vs outside)
 - Current state (existing system or greenfield)
 - Key decisions (from questioning)
 
-**OUTCOMES.md:** Use `templates/outcomes.md`. Populate:
+**`.system/{name}/OUTCOMES.md`:** Use `templates/outcomes.md`. Populate:
 - Desired outcomes with categories
 - Each outcome has: measurability, current state, target, priority
 - Out of scope items
 
-**DESIGN.md:** Use `templates/design.md`. Populate:
+**`.system/{name}/DESIGN.md`:** Use `templates/design.md`. Populate:
 - Overview (2-3 sentences)
 - Subsystem skeletons (purpose, what builds up, flow placeholders)
 - Build order (initial estimate)
 - Progress table (all "Not started")
 
-**STATE.md:** Use `templates/state.md`. Set:
+**`.system/{name}/STATE.md`:** Use `templates/state.md`. Set:
 - Stage: mapping
 - Last completed: new-system
 - Next step: map-system
@@ -176,13 +192,14 @@ Present the system back to the operator:
 
 [2-3 sentence description from SYSTEM-MAP.md]
 
-| Artifact     | Location             |
-|--------------|----------------------|
-| System Map   | .system/SYSTEM-MAP.md |
-| Outcomes     | .system/OUTCOMES.md   |
-| Design       | .system/DESIGN.md     |
-| State        | .system/STATE.md      |
-| Config       | .system/config.json   |
+| Artifact     | Location                              |
+|--------------|---------------------------------------|
+| System Map   | .system/{name}/SYSTEM-MAP.md          |
+| Outcomes     | .system/{name}/OUTCOMES.md            |
+| Design       | .system/{name}/DESIGN.md              |
+| State        | .system/{name}/STATE.md               |
+| Config       | .system/{name}/config.json            |
+| Active       | .system/ACTIVE                        |
 
 **[N] outcomes** | **[M] subsystems identified** | Ready for mapping
 
@@ -207,8 +224,11 @@ Next: /system:map-system -- inventory what builds up, what moves, where the boun
 
 <success_criteria>
 
-- [ ] `.system/` directory created
-- [ ] Abort triggered if `.system/` already existed
+- [ ] System name extracted from argument or asked inline
+- [ ] Name validated (lowercase, hyphens, no spaces)
+- [ ] Abort triggered if `.system/{name}/` already existed
+- [ ] `.system/{name}/` directory created
+- [ ] `.system/ACTIVE` written with the system name
 - [ ] Deep questioning completed (all 7 phases covered, threads followed, not rushed)
 - [ ] Operator confirmed the system description before documentation
 - [ ] Config preferences captured (mode, depth, diagram)

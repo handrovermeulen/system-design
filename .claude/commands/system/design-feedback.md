@@ -17,9 +17,9 @@ Optionally generates a system diagram showing what builds up, what moves, and wh
 
 Spawns the sys-feedback-designer agent.
 
-**Reads:** `.system/MAP.md`, `.system/flows/`, `.system/OUTCOMES.md`
-**Creates:** `.system/feedback/{mechanism-name}.md`, optionally `.system/system-diagram.excalidraw`
-**Updates:** `.system/STATE.md`
+**Reads:** `.system/{active}/MAP.md`, `.system/{active}/flows/`, `.system/{active}/OUTCOMES.md`
+**Creates:** `.system/{active}/feedback/{mechanism-name}.md`, optionally `.system/{active}/system-diagram.excalidraw`
+**Updates:** `.system/{active}/STATE.md`
 
 **After this command:** Run `/system:verify-closure` to test whether every loop is closed.
 
@@ -34,19 +34,22 @@ Spawns the sys-feedback-designer agent.
 
 <process>
 
-## Step 1: Validate State
+## Step 1: Resolve Active System and Validate
 
 ```bash
-[ ! -d .system/flows ] && echo "ERROR: No flows designed. Run /system:design-flows first." && exit 1
-ls .system/flows/*.md 2>/dev/null | wc -l | grep -q "^0$" && echo "ERROR: No flow files found. Run /system:design-flows first." && exit 1
+ACTIVE=$(cat .system/ACTIVE 2>/dev/null)
+[ -z "$ACTIVE" ] && echo "ERROR: No active system. Run /system:new-system [name] first." && exit 1
+[ ! -d ".system/$ACTIVE/flows" ] && echo "ERROR: No flows designed. Run /system:design-flows first." && exit 1
+ls ".system/$ACTIVE/flows/"*.md 2>/dev/null | wc -l | grep -q "^0$" && echo "ERROR: No flow files found. Run /system:design-flows first." && exit 1
+echo "Active system: $ACTIVE | Working directory: .system/$ACTIVE/"
 ```
 
-Read:
-- `.system/MAP.md`
-- `.system/OUTCOMES.md`
-- `.system/DESIGN.md`
-- `.system/config.json`
-- All files in `.system/flows/`
+From this point, all file paths use `.system/{active-system}/` as the root. Read:
+- `.system/{active-system}/MAP.md`
+- `.system/{active-system}/OUTCOMES.md`
+- `.system/{active-system}/DESIGN.md`
+- `.system/{active-system}/config.json`
+- All files in `.system/{active-system}/flows/`
 
 Extract: all accumulations from MAP.md, all flows, all outcomes, config preferences.
 
@@ -65,7 +68,7 @@ Spawning sys-feedback-designer agent.
 ## Step 3: Create Feedback Directory
 
 ```bash
-mkdir -p .system/feedback
+mkdir -p ".system/$ACTIVE/feedback"
 ```
 
 ## Step 4: Spawn sys-feedback-designer Agent
@@ -129,7 +132,7 @@ Read the agent's structured return. Extract:
 
 Verify feedback files were written:
 ```bash
-ls .system/feedback/*.md 2>/dev/null | wc -l
+ls ".system/$ACTIVE/feedback/"*.md 2>/dev/null | wc -l
 ```
 
 ## Step 6: Diagram Generation (Conditional)
@@ -197,7 +200,7 @@ Save the validated diagram to `.system/system-diagram.excalidraw`.
 
 ## Step 7: Update STATE.md
 
-Read `.system/STATE.md` and update:
+Read `.system/{active-system}/STATE.md` and update:
 - Stage: verification
 - Last completed: design-feedback
 - Next step: verify-closure
@@ -245,10 +248,10 @@ If diagram was generated:
 ```
 
 ```
-| Artifact         | Location                             |
-|------------------|--------------------------------------|
-| Feedback specs   | .system/feedback/                    |
-| Diagram          | .system/system-diagram.excalidraw    |
+| Artifact         | Location                                           |
+|------------------|----------------------------------------------------|
+| Feedback specs   | .system/{active-system}/feedback/                  |
+| Diagram          | .system/{active-system}/system-diagram.excalidraw  |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -261,9 +264,9 @@ Next: /system:verify-closure -- run five closure tests to verify the design is c
 
 <output>
 
-- `.system/feedback/{mechanism-name}.md` (one per mechanism, created)
-- `.system/system-diagram.excalidraw` (if diagram enabled)
-- `.system/STATE.md` (updated)
+- `.system/{active-system}/feedback/{mechanism-name}.md` (one per mechanism, created)
+- `.system/{active-system}/system-diagram.excalidraw` (if diagram enabled)
+- `.system/{active-system}/STATE.md` (updated)
 
 </output>
 

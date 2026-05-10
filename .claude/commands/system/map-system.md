@@ -15,9 +15,9 @@ Build a detailed structural inventory of the system. Map every accumulation (wha
 
 Spawns the sys-mapper agent to walk the operator through the inventory.
 
-**Reads:** `.system/SYSTEM-MAP.md`, `.system/OUTCOMES.md`
-**Creates:** `.system/MAP.md`
-**Updates:** `.system/STATE.md`
+**Reads:** `.system/{active}/SYSTEM-MAP.md`, `.system/{active}/OUTCOMES.md`
+**Creates:** `.system/{active}/MAP.md`
+**Updates:** `.system/{active}/STATE.md`
 
 **After this command:** Run `/system:design-flows` to design how things move between parts.
 
@@ -31,17 +31,21 @@ Spawns the sys-mapper agent to walk the operator through the inventory.
 
 <process>
 
-## Step 1: Validate State
+## Step 1: Resolve Active System and Validate
 
 ```bash
-[ ! -f .system/SYSTEM-MAP.md ] && echo "ERROR: No system initialized. Run /system:new-system first." && exit 1
+ACTIVE=$(cat .system/ACTIVE 2>/dev/null)
+[ -z "$ACTIVE" ] && echo "ERROR: No active system. Run /system:new-system [name] first." && exit 1
+[ ! -d ".system/$ACTIVE" ] && echo "ERROR: .system/$ACTIVE not found." && exit 1
+[ ! -f ".system/$ACTIVE/SYSTEM-MAP.md" ] && echo "ERROR: Run /system:new-system first — SYSTEM-MAP.md missing." && exit 1
+echo "Active system: $ACTIVE | Working directory: .system/$ACTIVE/"
 ```
 
-Read:
-- `.system/SYSTEM-MAP.md`
-- `.system/OUTCOMES.md`
-- `.system/DESIGN.md`
-- `.system/config.json`
+From this point, all file paths use `.system/{active-system}/` as the root. Read:
+- `.system/{active-system}/SYSTEM-MAP.md`
+- `.system/{active-system}/OUTCOMES.md`
+- `.system/{active-system}/DESIGN.md`
+- `.system/{active-system}/config.json`
 
 Extract: system name, purpose, actors, boundaries, subsystems, outcomes, config preferences.
 
@@ -114,12 +118,12 @@ Read the agent's structured return. Extract:
 
 Verify MAP.md was written:
 ```bash
-[ ! -f .system/MAP.md ] && echo "WARNING: MAP.md not written. Check agent output."
+[ ! -f ".system/$ACTIVE/MAP.md" ] && echo "WARNING: MAP.md not written. Check agent output."
 ```
 
 ## Step 5: Update STATE.md
 
-Read `.system/STATE.md` and update:
+Read `.system/{active-system}/STATE.md` and update:
 - Stage: flows
 - Last completed: map-system
 - Next step: design-flows
@@ -140,9 +144,9 @@ Read `.system/STATE.md` and update:
 
 [Inventory summary table from agent return]
 
-| Artifact   | Location        |
-|------------|-----------------|
-| System Map | .system/MAP.md  |
+| Artifact   | Location                          |
+|------------|-----------------------------------|
+| System Map | .system/{active-system}/MAP.md    |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -155,14 +159,15 @@ Next: /system:design-flows -- design flow connections between subsystems
 
 <output>
 
-- `.system/MAP.md` (created)
-- `.system/STATE.md` (updated)
+- `.system/{active-system}/MAP.md` (created)
+- `.system/{active-system}/STATE.md` (updated)
 
 </output>
 
 <success_criteria>
 
-- [ ] Abort triggered if `.system/SYSTEM-MAP.md` missing
+- [ ] Active system resolved from `.system/ACTIVE`
+- [ ] Abort triggered if `.system/{active}/SYSTEM-MAP.md` missing
 - [ ] sys-mapper agent spawned with full system context
 - [ ] Agent walked operator through accumulation inventory
 - [ ] All accumulations from SYSTEM-MAP.md captured with specifics
@@ -170,7 +175,7 @@ Next: /system:design-flows -- design flow connections between subsystems
 - [ ] Each accumulation has: location, inflows, outflows, current level, target level
 - [ ] Boundaries mapped: inside vs outside
 - [ ] External dependencies documented with impact if they change
-- [ ] MAP.md written with structured inventory
+- [ ] MAP.md written to `.system/{active}/MAP.md`
 - [ ] STATE.md updated with correct stage and next step
 - [ ] Operator knows next step is `/system:design-flows`
 

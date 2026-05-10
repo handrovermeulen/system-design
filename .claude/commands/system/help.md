@@ -20,22 +20,35 @@ Display this reference:
 
 Design complete systems before building them. Close the loop.
 
-Commands (run in order):
+Chain commands (run in order):
 
-  /system:new-system       Initialize a new system design
-  /system:map-system       Map what builds up, what moves, boundaries
-  /system:design-flows     Design flow connections between parts
-  /system:design-feedback  Design self-correction mechanisms
-  /system:verify-closure   Run 5 closure tests
-  /system:build-plan       Generate the build plan
+  /system:new-system [name]    Initialize a new named system design
+  /system:map-system           Map what builds up, what moves, boundaries
+  /system:design-flows         Design flow connections between parts
+  /system:design-feedback      Design self-correction mechanisms
+  /system:verify-closure       Run 5 closure tests
+  /system:build-plan           Generate the build plan
 
 Utilities:
 
-  /system:progress         Show current design state
-  /system:help             This reference
+  /system:progress             Show all systems and their current stage
+  /system:switch [name]        Switch the active system
+  /system:help                 This reference
 
-State directory: .system/ in the current project
-Each command produces artifacts consumed by the next.
+Multiple systems:
+
+  Each /system:new-system [name] creates a separate design in .system/{name}/.
+  One system is active at a time. All chain commands operate on the active system.
+  Use /system:switch to change which system is active.
+
+  Example:
+    /system:new-system telegram-router
+    /system:new-system content-pipeline
+    /system:switch telegram-router
+    /system:progress
+
+State directory: .system/{name}/ per system, .system/ACTIVE pointer
+Each chain command produces artifacts consumed by the next.
 
 The five closure tests:
   1. Output Consumption    Every output has a named consumer
@@ -44,7 +57,7 @@ The five closure tests:
   4. Failure Paths         Every flow has a documented failure case
   5. Information Access    Every decision has its data source
 
-Start: /system:new-system "your goal"
+Start: /system:new-system [your-system-name]
 ```
 
 </process>
