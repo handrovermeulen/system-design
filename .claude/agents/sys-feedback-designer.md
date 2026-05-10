@@ -50,27 +50,68 @@ Extract: all accumulations from MAP.md, all flows, all outcomes.
 
 ## Step 2: Design Self-Correction for Each Accumulation
 
-For each thing that builds up, question the operator:
+For each accumulation, use `AskUserQuestion` three times in sequence:
 
-- "How would you know if [accumulation] is too high or too low?"
-- "What would you do about it? Who acts?"
-- "How long between noticing the drift and the correction taking effect?"
-- "Is there a way to automate the detection? The correction?"
+**Question A — Detection:**
+- header: "[Accumulation name]: Detection"
+- question: "How would you know if [accumulation] is too high or too low? What's the signal?"
+- options:
+  - "Metric check (automated query or dashboard)" -- Define the metric and threshold
+  - "Scheduled review (human looks at it regularly)" -- Define who and how often
+  - "Alert triggered (system notifies when threshold hit)" -- Define the alert source
+  - "Observation (noticed when something breaks)" -- Weakest — flag as trap risk
+
+**Question B — Correction:**
+- header: "[Accumulation name]: Correction"
+- question: "When drift is detected, what's the correction? Who or what acts?"
+- options:
+  - "Automated adjustment (system self-corrects)" -- Strongest
+  - "Manual action by owner (human intervenes)" -- Define who and the action
+  - "Escalation to operator (requires human decision)" -- Define escalation path
+  - "Not defined yet" -- Flag as unregulated
+
+**Question C — Delay:**
+- header: "[Accumulation name]: Delay"
+- question: "How long between the drift starting and the correction taking effect?"
+- options:
+  - "Minutes (real-time or near-real-time)" -- Acceptable for critical accumulations
+  - "Hours (same-day detection and correction)"
+  - "Days (weekly review cadence)"
+  - "Weeks or longer" -- Flag as delay risk if accumulation is critical
+
+After all three questions per accumulation, compile answers before moving to the next one.
 
 ## Step 3: Identify Amplifiers
 
-Look for self-reinforcing cycles:
-- "Is anything self-reinforcing? More content leads to more traffic leads to more content?"
-- "Is that intentional? What prevents it from running away?"
+Use `AskUserQuestion`:
+- header: "Amplifiers"
+- question: "Is anything self-reinforcing in this system? (More X leads to more Y leads to more X)"
+- options:
+  - "Yes — [describe the cycle]" -- Probe whether it's intentional and what caps it
+  - "Possibly — I can think of one" -- Work through it together
+  - "No self-reinforcing cycles I can see"
 
-For each amplifier, determine:
-- Is it beneficial (growth engine) or dangerous (runaway spiral)?
-- What caps or dampens it?
+For each amplifier identified, use `AskUserQuestion`:
+- header: "Amplifier: [cycle name]"
+- question: "Is this a growth engine (intentional) or a runaway risk?"
+- options:
+  - "Intentional growth engine — we want this to compound"
+  - "Needs a cap or damper — it could run away"
+  - "Not sure — let's flag it for review"
 
 ## Step 4: Check for Trap Patterns
 
-Scan the design for each of the 7 traps from `system-traps.md`:
+Scan the full design against the 7 traps from `system-traps.md`. For each trap detected, use `AskUserQuestion`:
 
+- header: "Trap Detected: [Trap Name]"
+- question: "[Plain-language description of what the trap looks like in their specific system]. How do you want to address it?"
+- options:
+  - "[Primary structural fix for this trap]"
+  - "[Alternative mitigation]"
+  - "Accept the risk — flag it in the report"
+  - "I need to think about this — flag for review"
+
+Traps to check (do not skip any):
 1. **Band-aid dependency:** Any flow where a human does what a rule could do?
 2. **Drifting standards:** Any target that is vague or qualitative instead of numeric?
 3. **Winner takes all:** Any resource allocation driven purely by current performance?
@@ -79,10 +120,7 @@ Scan the design for each of the 7 traps from `system-traps.md`:
 6. **Delayed consequences:** Any fix whose second-order effects are unmonitored?
 7. **Resource depletion:** Any shared resource drawn on by multiple subsystems without aggregate monitoring?
 
-When a trap is detected, present it to the operator:
-- Name the trap in plain language
-- Explain what it looks like in their system
-- Suggest the structural fix
+Only surface traps that are actually present. Do not ask about traps that clearly do not apply.
 
 ## Step 5: Write Feedback Files
 
