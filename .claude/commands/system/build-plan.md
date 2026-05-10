@@ -100,34 +100,81 @@ Read your agent definition first:
 
 ## Step 4: Generate HTML Build Plan
 
-After the agent writes BUILD-PLAN.md, generate a self-contained interactive HTML triage board.
+After the agent writes BUILD-PLAN.md, generate a self-contained interactive HTML report using the PRGRMMD report pattern. Do not use the triage-board pattern.
 
-Use the triage-board pattern from `.claude/skills/html-templates/triage-board.md` (read that file before generating HTML).
-
-Brand spec (white theme):
+Brand spec (white theme — mandatory):
 ```css
---bg: #ffffff; --bg-secondary: #f8f8fb; --text: #0f0f0f; --text-muted: #6b7280;
---accent: #7c6af7; --accent-light: #ede9fe;
---success: #22c55e; --success-bg: #f0fdf4;
---border: #e5e7eb; --max-width: 1100px;
---font: system-ui, -apple-system, sans-serif;
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f8fb; --text: #0f0f0f; --text-muted: #6b7280;
+  --accent: #7c6af7; --accent-light: #ede9fe;
+  --success: #22c55e; --success-bg: #f0fdf4;
+  --error: #ef4444; --error-bg: #fef2f2;
+  --warning: #f59e0b; --warning-bg: #fffbeb;
+  --border: #e5e7eb; --code-bg: #f3f4f6;
+  --max-width: 1100px;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
 ```
 
-HTML structure:
-- **Header**: system name, component count, build stages count, date
-- **Filter bar**: filter by component type (skill, automation, data structure, SOP)
-- **Triage board columns**: one column per build stage (Stage 1, Stage 2, Stage 3...)
-- **Component cards**: each card shows component name, type badge, and whether it reuses an existing skill
-  - Skill = purple badge (`badge-purple`)
-  - Automation = blue badge (`badge-blue`)
-  - Data structure = teal badge (`badge-teal`)
-  - SOP = grey badge (`badge-grey`)
-  - Reusable existing skill = green "Reuse" badge alongside type badge
-- **Footer controls**: Reset (restores original stage assignments), Copy as markdown (exports current column arrangement as the build sequence)
+### HTML structure
 
-The operator can drag components between stages to reprioritise, then Copy as markdown to export the revised build order.
+**Header:**
+```html
+<div class="report-header">
+  <div class="report-meta">[System name] · [date]</div>
+  <h1>Build Plan</h1>
+  <div class="badge-row">
+    <span class="badge badge-neutral">[N] components</span>
+    <span class="badge badge-neutral">[N] stages</span>
+    <span class="badge badge-neutral">[N] reusable</span>
+  </div>
+</div>
+```
 
-Interactivity (all self-contained JS): drag-drop, tag filter by type, Reset, Copy as markdown.
+**Left ToC + main layout** (sticky sidebar navigation):
+```html
+<div class="layout">
+  <nav class="toc">
+    <div class="toc-title">Contents</div>
+    <a href="#summary">Summary</a>
+    <a href="#stage-1">Stage 1</a>
+    <!-- one link per stage -->
+    <a href="#claude-patterns">Claude Code Patterns</a>
+  </nav>
+  <main>...</main>
+</div>
+```
+
+**Summary section** — component type breakdown cards:
+- One card per type (Skill, Automation, Data Structure, SOP)
+- Each card: type name, count, colour-coded (skill = purple, automation = blue, data structure = teal, SOP = grey)
+
+**Per-stage sections** — one accordion per build stage:
+- Accordion header: "Stage N — [N components]" with a neutral badge
+- Accordion body: table of components in that stage
+  - Columns: Component | Type | Reuse | Notes
+  - Type badge: skill (purple), automation (blue), data structure (teal), SOP (grey)
+  - Reuse badge: green "Reuse" if an existing vault skill covers it, empty otherwise
+  - Notes: one-line description of what the component does
+
+**Claude Code Patterns section** — table mapping pattern to which components use it:
+- Columns: Pattern | Components
+
+**All HTML must be fully self-contained.** All CSS in a `<style>` block, all JS in a `<script>` at end of `<body>`. No CDN links.
+
+**Interactivity (mandatory):**
+- Accordion open/close on each stage section
+- ToC links highlight the active section on scroll (IntersectionObserver)
+- Type filter buttons above the stage sections: All / Skill / Automation / Data Structure / SOP — clicking filters which component rows are visible across all stages
+- Copy as markdown button in the header — exports the full stage-by-stage build order as a markdown checklist
+
+**Badge CSS classes to use:**
+- `badge-skill` → `background: var(--accent-light); color: var(--accent)`
+- `badge-automation` → `background: #dbeafe; color: #2563eb`
+- `badge-data` → `background: #ccfbf1; color: #0d9488`
+- `badge-sop` → `background: var(--bg-secondary); color: var(--text-muted); border: 1px solid var(--border)`
+- `badge-reuse` → `background: var(--success-bg); color: var(--success)`
+- `badge-neutral` → `background: var(--bg-secondary); color: var(--text-muted); border: 1px solid var(--border)`
 
 Save to `.system/{active-system}/BUILD-PLAN.html`.
 
@@ -200,8 +247,15 @@ Write updated STATE.md.
 - [ ] Existing vault skills checked for reuse
 - [ ] Build order derived from dependencies
 - [ ] BUILD-PLAN.md written
-- [ ] HTML triage board generated using triage-board pattern from html-templates/triage-board.md
-- [ ] HTML has columns per build stage, typed component cards, Reuse badges, drag-drop, Copy as markdown
+- [ ] HTML report generated using PRGRMMD report pattern (white theme, sticky ToC, accordions)
+- [ ] Header has component count, stage count, reuse count badges
+- [ ] Summary section has type breakdown cards (Skill/Automation/Data Structure/SOP)
+- [ ] One accordion section per build stage with component table (name, type badge, reuse badge, notes)
+- [ ] Claude Code Patterns section present
+- [ ] Type filter buttons work across all stage sections
+- [ ] Copy as markdown exports build order as checklist
+- [ ] ToC scroll highlighting active section
+- [ ] HTML is fully self-contained (no CDN, no external fonts)
 - [ ] BUILD-PLAN.html saved alongside markdown
 - [ ] [Open Visual Build Plan] link added to top of BUILD-PLAN.md
 - [ ] Claude Code patterns recommended
