@@ -186,7 +186,7 @@ Build elements in two passes — shapes first, then arrows. This is mandatory: a
 
 **Pass 1 — shapes:** accumulations (rectangles), system boundary (rectangle, dashed), trap warnings (text). Assign string IDs like `"acc-1"`, `"acc-2"`, `"boundary"`. Place shapes at explicit `x`/`y` coordinates. Layout left-to-right, 200px spacing between accumulations.
 
-Rectangle template:
+Rectangle template — include a `boundElements` array listing every arrow that connects to this shape:
 ```json
 {
   "type": "rectangle",
@@ -195,11 +195,16 @@ Rectangle template:
   "backgroundColor": "#dbeafe",
   "strokeColor": "#3b82f6",
   "fillStyle": "solid",
+  "boundElements": [
+    { "id": "flow-1", "type": "arrow" }
+  ],
   "label": { "text": "Accumulation Name" }
 }
 ```
 
-**Pass 2 — arrows:** bind every arrow to its source and target using the IDs from Pass 1. This is what makes arrows connect correctly. Use `startBinding` and `endBinding` on every arrow — never omit them.
+**Pass 2 — arrows:** bind every arrow to its source and target using the IDs from Pass 1. Use `startBinding` and `endBinding` with `"mode": "orbit"` and `"fixedPoint": [x, y]` — this is the syntax Excalidraw requires for arrows to actually connect. Never use `focus` or `gap` fields.
+
+`fixedPoint` controls where on the shape the arrow attaches. Use `[0.5, 1]` for bottom-center (arrow leaves downward), `[0.5, 0]` for top-center (arrow arrives from above), `[1, 0.5]` for right-center, `[0, 0.5]` for left-center. For left-to-right flows: source gets `fixedPoint: [1, 0.5]`, target gets `fixedPoint: [0, 0.5]`.
 
 Arrow template:
 ```json
@@ -209,14 +214,22 @@ Arrow template:
   "x": 260, "y": 230,
   "width": 140, "height": 0,
   "points": [[0, 0], [140, 0]],
-  "startBinding": { "elementId": "acc-1", "focus": 0, "gap": 8 },
-  "endBinding":   { "elementId": "acc-2", "focus": 0, "gap": 8 },
+  "startBinding": {
+    "mode": "orbit",
+    "elementId": "acc-1",
+    "fixedPoint": [1, 0.5]
+  },
+  "endBinding": {
+    "mode": "orbit",
+    "elementId": "acc-2",
+    "fixedPoint": [0, 0.5]
+  },
   "strokeColor": "#1e293b",
   "label": { "text": "trigger type" }
 }
 ```
 
-Feedback loop arrows: same pattern, `strokeColor: "#22c55e"`, add `"curve": "curved"` and route the `points` array back toward the source element.
+Feedback loop arrows: same binding syntax, `strokeColor: "#22c55e"`. For curved returns that loop back to the source, use `startBinding: null, endBinding: null` (unbound freehand arc) and route `points` manually below or above the elements — e.g. `[[0,0],[80,0],[80,80],[-200,80],[-200,0]]` to arc underneath.
 
 `points` rule: first point is always `[0, 0]`. Subsequent points are relative offsets from the arrow's `x`/`y`. For a straight right-going arrow of width W: `[[0,0],[W,0]]`. For a curved feedback return, use 3–4 points to arc below or above the elements.
 
