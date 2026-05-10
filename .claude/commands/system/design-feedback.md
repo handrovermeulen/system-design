@@ -155,66 +155,80 @@ If `excalidraw:installed`:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Generate an Excalidraw diagram using the excalidraw-diagram skill methodology.
+Generate a lightweight Excalidraw diagram. Do not load external skill references or run the render pipeline — Obsidian renders the file natively. Just generate valid JSON and save it.
 
-### Load skill references
+### Element mapping
 
-Read these files before generating any JSON:
-- `.claude/skills/excalidraw-diagram/SKILL.md` — design philosophy and full process
-- `.claude/skills/excalidraw-diagram/references/color-palette.md` — all color values
-- `.claude/skills/excalidraw-diagram/references/element-templates.md` — JSON copy-paste templates
-- `.claude/skills/excalidraw-diagram/references/json-schema.md` — full property reference
+| System element | Shape | Fill | Notes |
+|----------------|-------|------|-------|
+| Accumulation | rectangle | `#dbeafe` (light blue) | Label: name + target level |
+| Inflow / outflow | arrow | none | Label: trigger type |
+| Feedback loop | arrow, curved | none | Green stroke `#22c55e`, returns to source |
+| System boundary | rectangle, dashed stroke | none | Gray `#9ca3af` |
+| Trap warning | text | none | Red `#ef4444`, near affected element |
 
-### Visual mapping
+### JSON structure
 
-| System element | Visual pattern | Notes |
-|----------------|----------------|-------|
-| Accumulation | `rectangle` | Light blue fill. Label with name and target level. |
-| Inflow / outflow | Arrow (assembly line) | Dark arrow. Label with trigger type. |
-| Feedback mechanism | Spiral / cycle | Green arrow curving back to monitored accumulation. |
-| System boundary | Dashed `line` | Gray. Separates inside from outside. |
-| Trap warning | Free-floating text | Red. Annotation callout near affected component. |
+Generate the diagram as a single valid Excalidraw JSON file:
 
-### Design process
+```json
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [ ... ],
+  "appState": { "viewBackgroundColor": "#ffffff" },
+  "files": {}
+}
+```
 
-Follow the SKILL.md process exactly:
+Build elements in two passes — shapes first, then arrows. This is mandatory: arrows reference shape IDs, so shapes must exist first.
 
-1. Assess depth: this is a technical diagram. Use real system names, not placeholders.
-2. Map concepts to patterns: accumulations use rectangle containers, flows use assembly-line arrows, feedback uses cycle/spiral arrows returning to source.
-3. Ensure variety: boundary uses gap/break separation, trap warnings use annotation callouts.
-4. Sketch the flow: left-to-right for inflows and outflows, curved returns for feedback loops.
-5. Generate JSON section by section. Never generate the full file in one pass.
+**Pass 1 — shapes:** accumulations (rectangles), system boundary (rectangle, dashed), trap warnings (text). Assign string IDs like `"acc-1"`, `"acc-2"`, `"boundary"`. Place shapes at explicit `x`/`y` coordinates. Layout left-to-right, 200px spacing between accumulations.
 
-### Build sequence
+Rectangle template:
+```json
+{
+  "type": "rectangle",
+  "id": "acc-1",
+  "x": 100, "y": 200, "width": 160, "height": 60,
+  "backgroundColor": "#dbeafe",
+  "strokeColor": "#3b82f6",
+  "fillStyle": "solid",
+  "label": { "text": "Accumulation Name" }
+}
+```
 
-Namespace element ID seeds by section:
+**Pass 2 — arrows:** bind every arrow to its source and target using the IDs from Pass 1. This is what makes arrows connect correctly. Use `startBinding` and `endBinding` on every arrow — never omit them.
 
-- Section 1 (100xxx): accumulation rectangles
-- Section 2 (200xxx): flow arrows between accumulations
-- Section 3 (300xxx): feedback loop arrows
-- Section 4 (400xxx): system boundary line
-- Section 5 (500xxx): trap warning callouts
+Arrow template:
+```json
+{
+  "type": "arrow",
+  "id": "flow-1",
+  "x": 260, "y": 230,
+  "width": 140, "height": 0,
+  "points": [[0, 0], [140, 0]],
+  "startBinding": { "elementId": "acc-1", "focus": 0, "gap": 8 },
+  "endBinding":   { "elementId": "acc-2", "focus": 0, "gap": 8 },
+  "strokeColor": "#1e293b",
+  "label": { "text": "trigger type" }
+}
+```
 
-### Render and validate (mandatory)
+Feedback loop arrows: same pattern, `strokeColor: "#22c55e"`, add `"curve": "curved"` and route the `points` array back toward the source element.
 
-After generating JSON, render to PNG and view. Fix and re-render until passing all 27 quality checklist items from SKILL.md.
+`points` rule: first point is always `[0, 0]`. Subsequent points are relative offsets from the arrow's `x`/`y`. For a straight right-going arrow of width W: `[[0,0],[W,0]]`. For a curved feedback return, use 3–4 points to arc below or above the elements.
 
-The diagram saves to `Excalidraw/{active-system-name}-system-diagram.excalidraw` so Obsidian and the Excalidraw plugin can open it directly.
+Use real system names from MAP.md, not placeholders.
+
+### Save
 
 ```bash
 mkdir -p Excalidraw
-DIAGRAM_PATH="Excalidraw/$ACTIVE-system-diagram.excalidraw"
-echo "Diagram path: $DIAGRAM_PATH"
 ```
 
-After generating the JSON, render to PNG to validate:
-```bash
-cd .claude/skills/excalidraw-diagram/references && uv run python render_excalidraw.py "../../../../$DIAGRAM_PATH"
-```
-
-Use the Read tool to inspect the PNG. Fix JSON, re-render, repeat until the diagram is clean.
-
-Save the validated diagram to `Excalidraw/{active-system-name}-system-diagram.excalidraw`.
+Write the complete JSON to `Excalidraw/{active-system-name}-system-diagram.excalidraw`. One write, no render loop.
 
 ## Step 7: Update STATE.md
 
