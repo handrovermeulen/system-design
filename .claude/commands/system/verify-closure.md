@@ -133,6 +133,16 @@ Add this as the first line of `.system/{active-system}/CLOSURE-REPORT.md` (after
 [Open Visual Report](CLOSURE-REPORT.html)
 ```
 
+After saving, construct the absolute file URL so the operator can open it directly from chat:
+```bash
+echo "file://$(pwd)/.system/$ACTIVE/CLOSURE-REPORT.html"
+```
+
+Output this in your response as a clickable markdown link:
+```
+[Open Closure Report in Browser](file:///absolute/path/to/CLOSURE-REPORT.html)
+```
+
 ## Step 5: Handle Results
 
 **If `## CLOSURE VERIFIED`:**

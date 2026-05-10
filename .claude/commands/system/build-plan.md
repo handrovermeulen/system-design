@@ -183,6 +183,16 @@ Add this as the first line of `.system/{active-system}/BUILD-PLAN.md` (after any
 [Open Visual Build Plan](BUILD-PLAN.html)
 ```
 
+After saving, construct the absolute file URL so the operator can open it directly from chat:
+```bash
+echo "file://$(pwd)/.system/$ACTIVE/BUILD-PLAN.html"
+```
+
+Output this in your response as a clickable markdown link:
+```
+[Open Build Plan in Browser](file:///absolute/path/to/BUILD-PLAN.html)
+```
+
 ## Step 5: Present Build Plan
 
 Read the BUILD-PLAN.md written by the agent and present it:
