@@ -243,6 +243,18 @@ mkdir -p Excalidraw
 
 Write the complete JSON to `Excalidraw/{active-system-name}-system-diagram.excalidraw`. One write, no render loop.
 
+After saving, construct the absolute file URL so the operator can open it directly from chat:
+```bash
+echo "file://$(pwd)/Excalidraw/{active-system-name}-system-diagram.excalidraw"
+```
+
+Output this in your response as a clickable markdown link:
+```
+[Open System Diagram](file:///absolute/path/to/{active-system-name}-system-diagram.excalidraw)
+```
+
+Opening the link launches the file in Obsidian (if Excalidraw plugin is installed) or in the system default handler.
+
 ## Step 7: Update STATE.md
 
 Read `.system/{active-system}/STATE.md` and update:
