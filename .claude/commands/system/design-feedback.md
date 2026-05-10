@@ -141,21 +141,57 @@ Read `.system/config.json`. If `diagram` is `true`:
 ----------------------------------------------------
 ```
 
-Generate an Excalidraw diagram showing the full system:
-- Accumulations as rectangles (labeled with name and target level)
-- Flows as arrows between accumulations (labeled with trigger type)
-- Feedback mechanisms as curved arrows returning to their monitored accumulation
-- Boundary line separating inside from outside the system
-- Trap warnings as annotation callouts near affected components
+Generate an Excalidraw diagram using the excalidraw-diagram skill methodology.
 
-Use the `/excalidraw-diagram` skill if available. If not available, write the Excalidraw JSON directly to `.system/system-diagram.excalidraw`.
+### Load skill references
 
-The diagram should be readable at a glance. Keep labels short. Use color to distinguish:
-- Accumulations: light blue fill
-- Flows: dark arrows
-- Feedback loops: green arrows
-- Trap warnings: red callouts
-- Boundary: dashed gray line
+Read these files before generating any JSON:
+- `.claude/skills/excalidraw-diagram/SKILL.md` — design philosophy and full process
+- `.claude/skills/excalidraw-diagram/references/color-palette.md` — all color values
+- `.claude/skills/excalidraw-diagram/references/element-templates.md` — JSON copy-paste templates
+- `.claude/skills/excalidraw-diagram/references/json-schema.md` — full property reference
+
+### Visual mapping
+
+| System element | Visual pattern | Notes |
+|----------------|----------------|-------|
+| Accumulation | `rectangle` | Light blue fill. Label with name and target level. |
+| Inflow / outflow | Arrow (assembly line) | Dark arrow. Label with trigger type. |
+| Feedback mechanism | Spiral / cycle | Green arrow curving back to monitored accumulation. |
+| System boundary | Dashed `line` | Gray. Separates inside from outside. |
+| Trap warning | Free-floating text | Red. Annotation callout near affected component. |
+
+### Design process
+
+Follow the SKILL.md process exactly:
+
+1. Assess depth: this is a technical diagram. Use real system names, not placeholders.
+2. Map concepts to patterns: accumulations use rectangle containers, flows use assembly-line arrows, feedback uses cycle/spiral arrows returning to source.
+3. Ensure variety: boundary uses gap/break separation, trap warnings use annotation callouts.
+4. Sketch the flow: left-to-right for inflows and outflows, curved returns for feedback loops.
+5. Generate JSON section by section. Never generate the full file in one pass.
+
+### Build sequence
+
+Namespace element ID seeds by section:
+
+- Section 1 (100xxx): accumulation rectangles
+- Section 2 (200xxx): flow arrows between accumulations
+- Section 3 (300xxx): feedback loop arrows
+- Section 4 (400xxx): system boundary line
+- Section 5 (500xxx): trap warning callouts
+
+### Render and validate (mandatory)
+
+After generating JSON, render to PNG and view. Fix and re-render until passing all 27 quality checklist items from SKILL.md.
+
+```bash
+cd .claude/skills/excalidraw-diagram/references && uv run python render_excalidraw.py ../../../../.system/system-diagram.excalidraw
+```
+
+Use the Read tool to inspect the PNG. Fix JSON, re-render, repeat until the diagram is clean.
+
+Save the validated diagram to `.system/system-diagram.excalidraw`.
 
 ## Step 7: Update STATE.md
 
@@ -240,6 +276,9 @@ Next: /system:verify-closure -- run five closure tests to verify the design is c
 - [ ] One file per mechanism in `.system/feedback/`
 - [ ] Unregulated accumulations flagged prominently
 - [ ] Diagram generated if config.diagram is true
+- [ ] All four skill reference files read before generating JSON
+- [ ] JSON built section by section with namespaced ID seeds
+- [ ] Render pipeline run and diagram validated against 27-item checklist
 - [ ] STATE.md updated with correct stage and next step
 - [ ] Operator knows next step is `/system:verify-closure`
 
