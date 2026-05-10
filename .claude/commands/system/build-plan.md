@@ -20,6 +20,7 @@ Transform the verified system design into a concrete, ordered build plan. Classi
 
 **Produces:**
 - `.system/BUILD-PLAN.md`
+- `.system/BUILD-PLAN.html`
 
 **After this command:** Start building with `/new-skill {first-component}` or the recommended build method.
 
@@ -83,7 +84,45 @@ Read your agent definition first:
 ", subagent_type="general-purpose", description="Build planning")
 ```
 
-## Step 4: Present Build Plan
+## Step 4: Generate HTML Build Plan
+
+After the agent writes BUILD-PLAN.md, generate a self-contained interactive HTML triage board.
+
+Use the triage-board pattern from `.claude/skills/html-templates/triage-board.md` (read that file before generating HTML).
+
+Brand spec (white theme):
+```css
+--bg: #ffffff; --bg-secondary: #f8f8fb; --text: #0f0f0f; --text-muted: #6b7280;
+--accent: #7c6af7; --accent-light: #ede9fe;
+--success: #22c55e; --success-bg: #f0fdf4;
+--border: #e5e7eb; --max-width: 1100px;
+--font: system-ui, -apple-system, sans-serif;
+```
+
+HTML structure:
+- **Header**: system name, component count, build stages count, date
+- **Filter bar**: filter by component type (skill, automation, data structure, SOP)
+- **Triage board columns**: one column per build stage (Stage 1, Stage 2, Stage 3...)
+- **Component cards**: each card shows component name, type badge, and whether it reuses an existing skill
+  - Skill = purple badge (`badge-purple`)
+  - Automation = blue badge (`badge-blue`)
+  - Data structure = teal badge (`badge-teal`)
+  - SOP = grey badge (`badge-grey`)
+  - Reusable existing skill = green "Reuse" badge alongside type badge
+- **Footer controls**: Reset (restores original stage assignments), Copy as markdown (exports current column arrangement as the build sequence)
+
+The operator can drag components between stages to reprioritise, then Copy as markdown to export the revised build order.
+
+Interactivity (all self-contained JS): drag-drop, tag filter by type, Reset, Copy as markdown.
+
+Save to `.system/BUILD-PLAN.html`.
+
+Add this as the first line of BUILD-PLAN.md (after any frontmatter):
+```
+[Open Visual Build Plan](BUILD-PLAN.html)
+```
+
+## Step 5: Present Build Plan
 
 Read the BUILD-PLAN.md written by the agent and present it:
 
@@ -103,10 +142,14 @@ Reusable existing skills: [count]
 Claude Code patterns:
   [pattern]: [which components]
 
+Artifacts:
+  .system/BUILD-PLAN.md
+  .system/BUILD-PLAN.html
+
 Start building: /new-skill [first-component-name]
 ```
 
-## Step 5: Update State
+## Step 6: Update State
 
 Read `.system/STATE.md` and update:
 - Current Position: complete
@@ -120,6 +163,7 @@ Write updated STATE.md.
 <output>
 
 - `.system/BUILD-PLAN.md`
+- `.system/BUILD-PLAN.html`
 - `.system/STATE.md` (updated)
 
 </output>
@@ -134,6 +178,10 @@ Write updated STATE.md.
 - [ ] Existing vault skills checked for reuse
 - [ ] Build order derived from dependencies
 - [ ] BUILD-PLAN.md written
+- [ ] HTML triage board generated using triage-board pattern from html-templates/triage-board.md
+- [ ] HTML has columns per build stage, typed component cards, Reuse badges, drag-drop, Copy as markdown
+- [ ] BUILD-PLAN.html saved alongside markdown
+- [ ] [Open Visual Build Plan] link added to top of BUILD-PLAN.md
 - [ ] Claude Code patterns recommended
 - [ ] STATE.md updated
 - [ ] Operator knows how to start building
