@@ -20,6 +20,7 @@ This is the intellectual core of the /system skill chain. A system that passes a
 
 **Produces:**
 - `.system/CLOSURE-REPORT.md`
+- `.system/CLOSURE-REPORT.html`
 
 **After this command:** Run `/system:build-plan` to generate the build plan.
 
@@ -82,7 +83,43 @@ Return CLOSURE VERIFIED or CLOSURE GAPS FOUND with results.
 ", subagent_type="general-purpose", description="Closure verification")
 ```
 
-## Step 4: Handle Results
+## Step 4: Generate HTML Closure Report
+
+After the agent writes CLOSURE-REPORT.md, generate a self-contained interactive HTML report.
+
+Use the report pattern from `.claude/skills/html-templates/report.md` (read that file before generating HTML).
+
+Brand spec (white theme):
+```css
+--bg: #ffffff; --bg-secondary: #f8f8fb; --text: #0f0f0f; --text-muted: #6b7280;
+--accent: #7c6af7; --accent-light: #ede9fe;
+--success: #22c55e; --success-bg: #f0fdf4;
+--error: #ef4444; --error-bg: #fef2f2;
+--warning: #f59e0b; --warning-bg: #fffbeb;
+--border: #e5e7eb; --max-width: 1100px;
+--font: system-ui, -apple-system, sans-serif;
+```
+
+HTML structure:
+- **Header**: system name, overall score (e.g. "4/5 PASS"), date
+- **Score grid**: 5 check cards — PASS = green badge, FAIL = red badge, WARNING = amber badge
+- **Accordion sections**: one per closure test, auto-expanded if FAIL status
+- **Failures section** (if any): each failure with plain-language explanation and recommended fix
+- **Action items table** (if failures): Priority, Item, Recommended Fix columns
+
+Interactivity (all self-contained JS):
+- Accordion toggle on each test section
+- Auto-open any FAIL sections on page load
+- ToC scroll highlighting
+
+Save to `.system/CLOSURE-REPORT.html`.
+
+Add this as the first line of CLOSURE-REPORT.md (after any frontmatter):
+```
+[Open Visual Report](CLOSURE-REPORT.html)
+```
+
+## Step 5: Handle Results
 
 **If `## CLOSURE VERIFIED`:**
 
@@ -96,6 +133,10 @@ Items checked: [total]
 Warnings: [count]
 
 [Test result table from agent return]
+
+Artifacts:
+  .system/CLOSURE-REPORT.md
+  .system/CLOSURE-REPORT.html
 
 Next: /system:build-plan
 ```
@@ -115,7 +156,7 @@ Failures: [count]
 Fix the gaps, then re-run /system:verify-closure.
 ```
 
-## Step 5: Update State
+## Step 6: Update State
 
 Read `.system/STATE.md` and update:
 - Current Position: verification
@@ -129,6 +170,7 @@ Write updated STATE.md.
 <output>
 
 - `.system/CLOSURE-REPORT.md`
+- `.system/CLOSURE-REPORT.html`
 - `.system/STATE.md` (updated)
 
 </output>
@@ -140,6 +182,11 @@ Write updated STATE.md.
 - [ ] sys-closure-verifier agent spawned with full context
 - [ ] All 5 tests run with per-item results
 - [ ] CLOSURE-REPORT.md written
+- [ ] HTML report generated using report pattern from html-templates/report.md
+- [ ] HTML has score header, 5 check cards, accordion detail sections, action items table
+- [ ] FAIL sections auto-expand on page load
+- [ ] CLOSURE-REPORT.html saved alongside markdown
+- [ ] [Open Visual Report] link added to top of CLOSURE-REPORT.md
 - [ ] Results presented clearly (pass or gaps)
 - [ ] Failures paired with specific fix recommendations
 - [ ] STATE.md updated
